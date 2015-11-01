@@ -23,7 +23,7 @@ install-dev:
 	pip install https://github.com/mgk/bumpversion/zipball/post-hook
 
 release: clean test
-	PYTHONPATH=. bumpversion --post-hook bump.hook release
+	$(BUMP) release
 	python setup.py sdist bdist_wheel
 	twine upload -r pypitest dist/*
 	git push origin master --tags
