@@ -1,0 +1,64 @@
+---
+
+# The AWS IoT endpoint host for your AWS account
+host: MY_IOT_HOST.iot.us-east-1.amazonaws.com
+
+# public certificate and private key
+client_cert: /etc/thingpin/cert.pem
+private_key: /etc/thingpin/private-key.pem
+
+# Pin numbering you are using
+#   see http://sourceforge.net/p/raspberry-gpio-python/wiki/BasicUsage/
+#   or Google "rpi GPIO pin mode"
+pin_mode: "BCM"
+#pin_mmode: "BOARD"
+
+# How often to check pins and report state to AWS IoT even if there are no
+# changes detected. This lets you know thingpin is healthy.
+heartbeat_interval_seconds: 30
+
+# At startup an estimated monthly cost of publishing messages is printed.
+#
+# Notes:
+#  - this does not include the cost of any message subscribers
+#  - the price of messages will likely change over time
+#
+# See the AWS IoT Pricing page for details and updates to the pricing model.
+aws_iot_message_unit_cost: !!float 5e-6
+
+# AWS Things to update and their GPIO pins. Add as many as you've got.
+things:
+    garage-door-1:
+        # Example: a normally open reed switch connected between pin 14 and
+        # GND. When the switch is open (or if the sensor wire is cut) the pin
+        # will read HIGH thanks to the pull up resistor. When the switch is
+        # closed the pin will read LOW.
+        #
+        # Adjust these to match your sensor circuit.
+        #
+        pin: 21
+
+        # Comment out to disable the pull up/down resistor
+        # if your circuit does not need it.
+        resistor: pull_up
+
+        # The AWS IoT states to use for each pin reading
+        iot_states:
+            HIGH:
+                state: open
+            LOW:
+                state: closed
+
+    some-thing:
+        pin: 16
+        resistor: pull_down
+
+        # These can be whatever you like. Nonsensical example below.
+        # Run it and see what AWS IoT Thing state shows.
+        iot_states:
+            HIGH:
+                foo:
+                    some_data: 42
+            LOW:
+                color: blue
+
