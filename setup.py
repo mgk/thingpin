@@ -23,7 +23,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='thingpin',
-    version='1.1.0-dev',
+    version='1.1.0',
     description='Raspberry Pi pin monitor that reports to AWS IoT',
     long_description=__doc__,
     url='https://github.com/mgk/thingpin/blob/master/README.md',
