@@ -1,6 +1,7 @@
 import os
 import time
 import traceback
+from threading import Lock
 from thingamon import Client, Thing
 from RPi import GPIO
 
@@ -11,7 +12,9 @@ class Pin(object):
         self.pin = pin
         self.resistor = resistor
 
-        self.current_reading = None
+        self._reading_lock = Lock()
+        self._curr_reading = None
+        self._reading_time = 0
 
         if self.resistor is not None:
             if self.resistor == 'pull_up':
@@ -22,7 +25,15 @@ class Pin(object):
                 raise ValueError('resistor must be "pull_up" or "pull_down"')
 
     def read(self):
-        return GPIO.input(self.pin)
+        new_reading = GPIO.input(self.pin)
+        now = time.time()
+        with self._reading_lock:
+            prev_reading = self._curr_reading
+            dt = now - self._reading_time
+            self._reading_time = now
+            self._curr_reading = new_reading
+
+        return (prev_reading, new_reading, dt)
 
     def start_reading(self):
         GPIO.setup(self.pin, GPIO.IN)
@@ -30,10 +41,12 @@ class Pin(object):
             GPIO.setup(self.pin, GPIO.IN, pull_up_down=self.resistor)
 
         def change(pin):
-            reading = self.read()
-            if reading != self.current_reading:
-                self.current_reading = reading
-                self.context.update_pin(self.pin, reading)
+            prev_reading, new_reading, dt = self.read()
+            if prev_reading != new_reading:
+                self.context.update_pin(self.pin,
+                                        prev_reading,
+                                        new_reading,
+                                        dt)
 
         GPIO.add_event_detect(self.pin, GPIO.BOTH, callback=change)
 
@@ -102,7 +115,6 @@ class Thingpin(object):
         self.pin_mode = pin_mode
         self.things = None
 
-        self.last_publish_time = 0
         self.client = None
         self.initialized = False
 
@@ -137,20 +149,21 @@ class Thingpin(object):
         self.client.client.loop_stop()
         GPIO.cleanup()
 
-    def publish(self, thing, state):
-        self.last_publish_time = time.time()
-        thing.publish_state(state)
-
-    def update_pin(self, pin, reading):
-        self.log.info('update {} : {}'.format(pin, reading))
+    def update_pin(self, pin, prev_reading, curr_reading, dt):
+        self.log.info('update: {} {}->{}, dt={}'.format(
+            pin, prev_reading, curr_reading, dt))
         thing = self.things[pin]
+        state = dict(curr=self.pin_reading_to_state(thing, curr_reading))
+        if prev_reading is not None:
+            state['prev'] = self.pin_reading_to_state(thing, prev_reading)
+            state['dt'] = dt
+        thing['thing'].publish_state(state)
 
+    def pin_reading_to_state(self, thing, reading):
         if reading == GPIO.HIGH:
-            state = thing['iot_states']['HIGH']
+            return thing['iot_states']['HIGH']
         else:
-            state = thing['iot_states']['LOW']
-
-        self.publish(thing['thing'], state)
+            return thing['iot_states']['LOW']
 
     def guess_monthly_cost(self):
         # assumptions:
@@ -185,7 +198,8 @@ class Thingpin(object):
         while True:
             for thing in self.things.values():
                 pin = thing['pin']
-                self.update_pin(pin.pin, pin.read())
+                prev_reading, new_reading, dt = pin.read()
+                self.update_pin(pin.pin, prev_reading, new_reading, dt)
             time.sleep(self.heartbeat_interval_seconds)
 
         self.client.client.loop_stop()

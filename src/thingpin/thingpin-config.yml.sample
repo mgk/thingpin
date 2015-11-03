@@ -48,17 +48,3 @@ things:
                 state: open
             LOW:
                 state: closed
-
-    some-thing:
-        pin: 16
-        resistor: pull_down
-
-        # These can be whatever you like. Nonsensical example below.
-        # Run it and see what AWS IoT Thing state shows.
-        iot_states:
-            HIGH:
-                foo:
-                    some_data: 42
-            LOW:
-                color: blue
-
