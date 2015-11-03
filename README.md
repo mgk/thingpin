@@ -1,3 +1,5 @@
+[![Downloads](https://img.shields.io/pypi/dm/thingpin.svg)](https://pypi.python.org/pypi/thingpin)
+
 # thingpin
 
 A Raspberry Pi sensor monitor that publishes to [AWS IoT](https://aws.amazon.com/iot/) using [MQTT](http://mqtt.org/). Features:
