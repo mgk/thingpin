@@ -150,11 +150,13 @@ class Thingpin(object):
         GPIO.cleanup()
 
     def update_pin(self, pin, prev_reading, curr_reading, dt):
-        self.log.info('update: {} {}->{}, dt={}'.format(
+        self.log.info('update: {} {} -> {}, dt={}'.format(
             pin, prev_reading, curr_reading, dt))
         thing = self.things[pin]
         state = dict(curr=self.pin_reading_to_state(thing, curr_reading))
-        if prev_reading is not None:
+        if prev_reading is None:
+            state['dt'] = -1
+        else:
             state['prev'] = self.pin_reading_to_state(thing, prev_reading)
             state['dt'] = dt
         thing['thing'].publish_state(state)
