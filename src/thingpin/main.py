@@ -74,7 +74,7 @@ def main():
         log.error('must run on Raspberry Pi')
         sys.exit(1)
 
-    service = Thingpin(log, **config)
+    service = Thingpin(**config)
 
     pidfile = args.get('--pidfile')
     if pidfile is not None:

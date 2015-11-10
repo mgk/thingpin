@@ -43,7 +43,7 @@ bump-minor:
 
 test:
 	pep8 setup.py src/thingpin
-	# py.test
+	py.test
 
 scp: build
 	scp dist/*.gz pi@pi2a.local:~/

@@ -35,7 +35,7 @@ setup(
       'thingpin': ['*'],
       },
     install_requires=[
-        'thingamon',
+        'thingamon >= 0.2.2',
         'pyyaml',
         'python-daemon',
         'docopt',
@@ -43,7 +43,11 @@ setup(
     entry_points={
         'console_scripts': ['thingpin=thingpin.main:main'],
     },
-    tests_require=['pep8'],
+    tests_require=[
+        'pep8',
+        'pytest',
+        'freezegun'
+    ],
     platforms='any',
     license='MIT',
     keywords="aws iot mqtt sensor gpio raspberry pi rpi",

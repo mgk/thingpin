@@ -4,8 +4,8 @@
 host: MY_IOT_HOST.iot.us-east-1.amazonaws.com
 
 # public certificate and private key
-client_cert: /etc/thingpin/cert.pem
-private_key: /etc/thingpin/private-key.pem
+client_cert: ~/cert.pem
+private_key: ~/private-key.pem
 
 # Pin numbering you are using
 #   see http://sourceforge.net/p/raspberry-gpio-python/wiki/BasicUsage/
@@ -26,9 +26,11 @@ heartbeat_interval_seconds: 30
 # See the AWS IoT Pricing page for details and updates to the pricing model.
 aws_iot_message_unit_cost: !!float 5e-6
 
-# AWS Things to update and their GPIO pins. Add as many as you've got.
+# AWS Things to update and their settings. Each key is a thing name.
+# Add as many as you've got.
+
 things:
-    garage-door-1:
+    important-door-1:
         # Example: a normally open reed switch connected between pin 14 and
         # GND. When the switch is open (or if the sensor wire is cut) the pin
         # will read HIGH thanks to the pull up resistor. When the switch is
@@ -41,6 +43,14 @@ things:
         # Comment out to disable the pull up/down resistor
         # if your circuit does not need it.
         resistor: pull_up
+
+        # debounce delay in seconds
+        # Adjust this based on your sensor. 750ms works
+        # well with the reed switch setup I have.
+        debounce_delay: 0.750
+
+        # how long to sleep after each poll in seconds
+        sleep: 0.050
 
         # The AWS IoT states to use for each pin reading
         iot_states:
