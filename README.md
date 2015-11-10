@@ -6,7 +6,7 @@ A Raspberry Pi sensor monitor that publishes to [AWS IoT](https://aws.amazon.com
 
  + runs interactively or as a well behaved service daemon that starts automatically on boot
  + can watch any number of GPIO pins for HIGH or LOW state
- + reports pin changes immediately to AWS IoT
+ + reports pin changes to AWS IoT
  + highly configurable
  	+ pin 21 HIGH can report {"door": "open"} and pin 15 LOW can report {"water": "detected": "yes"}} to AWS IoT
  	+ pull up or pull down resistors can be software configured independently for each input
@@ -71,11 +71,29 @@ thingpin -h
 
 Install as daemon: (**doc in progress, watch tihs space**)
 
-*todo: script for `installl-thingpin-daemon` includes certs, generates config, does init.d stuff, will still need to edit config for your sensors
+### Design Notes
+
++ each pin is polled in a separate daemon thread called a Watcher
+
++ AWS IoT is updated using `thingamon` which publishes MQTT messages in a
+  its own thread
+
++ the Watcher polling loop is a basic sleep poll that uses [Limor Fried's version of debounce](https://www.arduino.cc/en/Tutorial/Debounce) for signal changes. I ran into problems using the fancier GPIO functionality:
+
+  - `wait_for_edge()` is ideal for a daemon loop, but it can only wait on one pin and cannot be used simulataneously by more than one thread. Ran into [this issue](http://sourceforge.net/p/raspberry-gpio-python/tickets/103/) trying to use `wait_for_edge()`.
+
+  - `add_event_detect()` often raises a RuntimeError. Retrying in a loop with a delay until it succeeds seemed to work, but is pretty ugly.
+
+The basic poll/sleep loop is reasonable many applications. If you need tighter control over timing consider a real time system like an Arduino.
+
+TODOs:
+
+ + script for `installl-thingpin-daemon` includes certs, generates config, does init.d stuff, will still need to edit config for your sensors
+ + implement Heartbeat
 
 ## Cost
 
-AWS IoT currently charges $5 / million messages sent. `thingpin` guesstimates its monthly AWS IoT cost for you at startup (for the default setup with 2 sensors it is around $0.87 / month). This is just a guess and depends on your config and sensor activity. For accurate and up to date info see the AWS IoT Pricing page.
+AWS IoT currently charges $5 / million messages sent. `thingpin` guesstimates its monthly AWS IoT cost for you at startup. YMMV, it depends on your config and sensor activity. For accurate and up to date info see the AWS IoT Pricing page. For many applications like door open/closed detectors the cost should be less than a penny a month.
 
 ## License
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)

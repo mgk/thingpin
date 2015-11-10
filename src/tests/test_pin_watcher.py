@@ -105,34 +105,31 @@ def incr_time(seconds=0):
 def assert_almost_equal(actual, expected, fraction=1e-3, msg=None):
     assert abs(actual - expected) < fraction * expected
 
-@patch.object(thingpin.pin.GPIO, 'wait_for_edge')
+@patch('time.sleep', return_value=None)
 @patch.object(thingpin.pin.GPIO, 'input')
-def test_loop(input, wait_for_edge, use_case):
+def test_loop(mock_input, mock_time, use_case):
     """Test each use case"""
     pin = 19
 
-    def wait_generator(readings):
-        for r in readings:
-            incr_time(r[0])
-            yield
-
     def input_generator(readings):
         for r in readings:
+            incr_time(r[0])
             yield r[1]
+    mock_input.side_effect = input_generator(use_case['readings'])
 
-    wait_for_edge.side_effect = wait_generator(use_case['readings'])
-    input.side_effect = input_generator(use_case['readings'])
+    sleeps = [r[0] for r in use_case['readings']]
+    mock_time.side_effect = sleeps
 
     observer = Mock()
-    w = Watcher(observer, pin, debounce_delay=use_case['debounce'],
-                daemon=False)
+    w = Watcher(observer,
+                pin,
+                debounce_delay=use_case['debounce'],
+                sleep=sleeps)
     w.start()
     w.join()
 
-    assert wait_for_edge.call_count == len(use_case['readings']) + 1
-    assert input.mock_calls == [
-        call(pin) for i in range(len(use_case['readings']))
-    ]
+    assert mock_time.mock_calls == [call(s) for s in sleeps]
+    assert mock_input.mock_calls == [call(pin) for i in range(len(sleeps))]
     assert observer.update_pin.mock_calls == [
         call(19, u) for u in use_case['expected_updates']
     ]

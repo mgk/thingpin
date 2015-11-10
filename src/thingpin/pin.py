@@ -11,7 +11,7 @@ LOW = GPIO.LOW
 
 def set_pin_mode(mode):
     """
-    Set pin numbering mode.
+    Set pin numbering mode for all pins.
 
     Args:
         mode (str): mode to set, must be 'BOARD' or 'BCM'
@@ -21,7 +21,7 @@ def set_pin_mode(mode):
 
 def setup_input_pin(pin, resistor=None):
     """
-    Setup input pin.
+    Setup an input pin.
 
     Setup pin for input and optionally configure a pull up or pull down
     resistor. `set_pin_mode` must be called first.
@@ -48,26 +48,44 @@ def setup_input_pin(pin, resistor=None):
 
 
 def pin_cleanup():
+    """Reset GPIO pin state for all pins"""
     GPIO.cleanup()
 
 
 class Watcher(Thread):
     def __init__(self, observer, pin, sleep, debounce_delay=0, daemon=True):
+        """
+        Create daemon thread that reports pin changes to an observer callback.
+
+        Args:
+            observer (object): object to receive notifications. When a pin
+                change is detected the `observer.update_pin(pin, reading)`
+                method is called.
+            pin (int): pin to watch
+            sleep (float): how long to sleep in seconds in each polling loop.
+                For testing this can also be an Iterable of floats in which
+                case the Thread exits when the Iterable is complete.
+            debounce_delay (float): how long a new pin reading has to hold
+                steady before it is accepted (and passed to `update_pin()`)
+            daemon (bool): whether to run as daemon. Mostly for testing.
+        """
         super(Watcher, self).__init__(name='PinWatcher-{}'.format(pin))
         self.daemon = daemon
         self.observer = observer
         self.pin = pin
+
+        if isinstance(sleep, Iterable):
+            self.sleep_iter = sleep
+        else:
+            self.sleep_iter = itertools.repeat(sleep)
+
         self.debounce_delay = debounce_delay
         self.reading = None
         self.last_reading = None
         self.debounce_time = 0
 
     def run(self):
-        while True:
-            try:
-                GPIO.wait_for_edge(self.pin, GPIO.BOTH)
-            except StopIteration as e:
-                return
+        for sleep in self.sleep_iter:
             new_reading = GPIO.input(self.pin)
             now = time.time()
             dt = now - self.debounce_time
@@ -77,3 +95,4 @@ class Watcher(Thread):
                 self.observer.update_pin(self.pin, new_reading)
                 self.reading = new_reading
             self.last_reading = new_reading
+            time.sleep(sleep)
