@@ -7,7 +7,7 @@ BUMP = PYTHONPATH=src/misc bumpversion \
        --post-hook bump.hook
 
 build: clean
-	python setup.py sdist bdist_wheel
+	python setup.py bdist_wheel
 
 clean:
 	$(RM) build dist *.egg-info .coverage htmlcov $(DEB)
@@ -24,7 +24,7 @@ install-dev:
 
 release: clean test
 	$(BUMP) release
-	python setup.py sdist bdist_wheel
+	python setup.py bdist_wheel
 	twine upload -r pypitest dist/*
 	git push origin master --tags
 	@echo
@@ -46,7 +46,7 @@ test:
 	py.test
 
 scp: build
-	scp dist/*.gz pi@pi2a.local:~/
+	scp dist/* pi@pi2a.local:~/
 
 deb: build
 	fpm -s dir -t deb -a all \
