@@ -17,7 +17,7 @@ Options:
     -h --help               show usage and exit
     -c --config=CONFIG      YAML config file [default: thingpin-config.yml]
     -p --pidfile=PIDFILE    run as a daemon, writing process id to PIDFILE
-    -l --log=LOG            log file to use. By defaault /var/log/thingpin.log
+    -l --log=LOG            log file to use. By default /var/log/thingpin.log
                             is used when running as a daemon and standard
                             out is used otherwise.
 """
