@@ -10,6 +10,7 @@ This project uses [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - bugs
+
 ## [1.2.0](https://github.com/mgk/thingpin/releases/tag/v1.2.0) - [2015-11-11]
 ### Added
 - tests
