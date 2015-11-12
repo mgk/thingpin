@@ -52,7 +52,6 @@ setup(
     tests_require=[
         'pep8',
         'pytest',
-        'coveralls',
         'freezegun'
     ],
     platforms='any',
