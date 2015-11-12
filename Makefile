@@ -45,6 +45,10 @@ test:
 	pep8 setup.py src/thingpin
 	py.test
 
+coverage:
+		coverage run --source=src/thingpin -m py.test
+		coverage html
+
 scp: build
 	scp dist/* pi@pi2a.local:~/
 

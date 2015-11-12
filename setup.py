@@ -13,6 +13,12 @@ enabled.
 .. _See Documentation for Installation and Usage details: https://github.com\
 /mgk/thingpin/blob/master/README.md
 
+.. |Build Status| image:: https://img.shields.io/travis/mgk/thingpin.svg
+   :target: https://travis-ci.org/mgk/thingpin
+
+.. |Coverage Status| image:: https://img.shields.io/coveralls/mgk/thingpin.svg
+   :target: https://coveralls.io/github/mgk/thingpin?branch=master
+
 .. |Downloads| image:: https://img.shields.io/pypi/dm/thingpin.svg
    :target: https://pypi.python.org/pypi/thingpin
 """
@@ -50,9 +56,9 @@ setup(
     ],
     platforms='any',
     license='MIT',
-    keywords="aws iot mqtt sensor gpio raspberry pi rpi",
+    keywords="aws iot thing mqtt sensor gpio raspberry pi rpi",
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'Environment :: Console',

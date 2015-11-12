@@ -1,3 +1,5 @@
+[![Build Status](https://img.shields.io/travis/mgk/thingpin.svg)](https://travis-ci.org/mgk/thingpin)
+[![Coverage Status](https://img.shields.io/coveralls/mgk/thingpin.svg)](https://coveralls.io/github/mgk/thingpin?branch=master)
 [![Downloads](https://img.shields.io/pypi/dm/thingpin.svg)](https://pypi.python.org/pypi/thingpin)
 
 # thingpin
@@ -59,7 +61,6 @@ pip install thingpin
 
 ```
 
-
 ### Running
 
 Run interactively on RPi:
@@ -80,7 +81,7 @@ Install as daemon: (**doc in progress, watch tihs space**)
 
 + the Watcher polling loop is a basic sleep poll that uses [Limor Fried's version of debounce](https://www.arduino.cc/en/Tutorial/Debounce) for signal changes. I ran into problems using the fancier GPIO functionality:
 
-  - `wait_for_edge()` is ideal for a daemon loop, but it can only wait on one pin and cannot be used simulataneously by more than one thread. Ran into [this issue](http://sourceforge.net/p/raspberry-gpio-python/tickets/103/) trying to use `wait_for_edge()`.
+  - `wait_for_edge()` is ideal for a daemon loop, but it can only wait on one pin and cannot be used simultaneously by more than one thread. Ran into [this issue](http://sourceforge.net/p/raspberry-gpio-python/tickets/103/) trying to use `wait_for_edge()`.
 
   - `add_event_detect()` often raises a RuntimeError. Retrying in a loop with a delay until it succeeds seemed to work, but is pretty ugly.
 
@@ -93,7 +94,7 @@ TODOs:
 
 ## Cost
 
-AWS IoT currently charges $5 / million messages sent. `thingpin` guesstimates its monthly AWS IoT cost for you at startup. YMMV, it depends on your config and sensor activity. For accurate and up to date info see the AWS IoT Pricing page. For many applications like door open/closed detectors the cost should be less than a penny a month.
+AWS IoT currently charges $5 / million messages sent. `thingpin` guesstimates its monthly AWS IoT cost for you at startup. YMMV, it depends on your config and sensor activity. For accurate and up to date info see the AWS IoT Pricing page. For a typical door sensor the cost is less than a penny a month.
 
 ## License
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
