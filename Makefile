@@ -7,7 +7,7 @@ BUMP = PYTHONPATH=src/misc bumpversion \
        --post-hook bump.hook
 
 build: clean
-	python setup.py bdist_wheel
+	python setup.py sdist bdist_wheel
 
 clean:
 	$(RM) build dist *.egg-info .coverage htmlcov $(DEB)
@@ -25,7 +25,7 @@ install-dev:
 
 release: clean test
 	$(BUMP) release
-	python setup.py bdist_wheel
+	python setup.py sdist bdist_wheel
 	twine upload -r pypitest dist/*
 	git push origin master --tags
 	@echo
