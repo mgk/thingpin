@@ -13,3 +13,7 @@ script:
 
 after_success:
   - coveralls
+
+cache:
+  directories:
+    - $HOME/.cache/pip
