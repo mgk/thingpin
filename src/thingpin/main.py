@@ -4,7 +4,7 @@
 Usage: thingpin -h
        thingpin [options] run
        thingpin create-config
-       thingpin install-service
+       thingpin [options] install-service
 
 Monitor GPIO pins and update AWS IoT via MQTT.
 
@@ -54,10 +54,11 @@ def main():
         if os.path.exists(config_file):
             print('config file {} already exists, not overwriting'.format(
                 config_file))
+            return 2
         else:
             shutil.copyfile(sample, config_file)
             print('created config file: {}'.format(config_file))
-        exit()
+            return
 
     config_file = os.path.expanduser(args['--config'])
     with open(config_file) as f:
@@ -65,14 +66,14 @@ def main():
 
     if args['install-service']:
         print('** coming soon - watch this space **')
-        exit()
+        return
 
     log = get_logger(args)
     log.info('ok')
 
     if Thingpin is None:
         log.error('must run on Raspberry Pi')
-        sys.exit(1)
+        return 1
 
     service = Thingpin(**config)
 
@@ -85,7 +86,7 @@ def main():
         except KeyboardInterrupt:
             log.info('exiting on Ctrl-C...')
             service.cleanup()
-            sys.exit()
+            return
 
 
 def get_logger(args):
@@ -125,4 +126,4 @@ def run_as_daemon(service, pidfile):
                 service.log.error(line)
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
