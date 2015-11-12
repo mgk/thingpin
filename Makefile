@@ -18,7 +18,7 @@ very-clean: clean
 
 install:
 	python setup.py install
-	pip install coveralls
+	pip install coveralls freezegun
 
 install-dev:
 	pip install https://github.com/mgk/bumpversion/zipball/post-hook
