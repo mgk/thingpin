@@ -1,5 +1,5 @@
 """
-|Downloads|
+|Build Status| |Coverage Status| |Downloads|
 
 thingpin
 ========
