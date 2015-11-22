@@ -1,5 +1,6 @@
 """
 |Build Status| |Coverage Status| |Downloads|
+|Flux Cap|
 
 thingpin
 ========
@@ -21,6 +22,9 @@ enabled.
 
 .. |Downloads| image:: https://img.shields.io/pypi/dm/thingpin.svg
    :target: https://pypi.python.org/pypi/thingpin
+
+.. |Downloads| image::https://img.shields.io/badge/flux%20capacitor-\
+1.21%20GW-orange.svg
 """
 import os
 import sys
