@@ -18,7 +18,10 @@ very-clean: clean
 
 install:
 	python setup.py install
-	pip install coveralls freezegun
+	pip install \
+		coveralls \
+		freezegun \
+		https://github.com/adafruit/io-client-python/zipball/65320a
 
 install-dev:
 	pip install https://github.com/mgk/bumpversion/zipball/post-hook

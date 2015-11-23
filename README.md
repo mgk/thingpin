@@ -6,20 +6,39 @@
 
 # thingpin
 
-A Raspberry Pi sensor monitor that publishes to [AWS IoT](https://aws.amazon.com/iot/) using [MQTT](http://mqtt.org/). Features:
+A Raspberry Pi sensor monitor that publishes to [AWS IoT](https://aws.amazon.com/iot/) using [MQTT](http://mqtt.org/) or [Adafruit IO](https://io.adafruit.com/). Features:
 
  + runs interactively or as a well behaved service daemon that starts automatically on boot
  + can watch any number of GPIO pins for HIGH or LOW state
- + reports pin changes to AWS IoT
+ + reports pin changes via MQTT using [thingamon](https://pypi.python.org/pypi/thingamon)
+)
  + highly configurable
  	+ pin 21 HIGH can report {"door": "open"} and pin 15 LOW can report {"water": "detected": "yes"}} to AWS IoT
  	+ pull up or pull down resistors can be software configured independently for each input
 
+
 ## Getting Started
 
-You'll need an AWS account with IoT enabled. Run through the AWS IoT Getting Started guide to create and test a sample thing. The setup may feel a little cumbersome, but it will be worth it.
+thingpin can report status to AWS IoT or Adafruit IO. Both services are currently in beta. AWS IoT is an open beta, Adafruit IO currently requires a sign up. My Adafruit IO beta request was answered in a few days.
 
-Once setup you use an x.509 certificate to authenticate your thing: no AWS access keys are needed on your Raspberry Pi.
+Things to note at a glance (see the docs for details):
+
+#### Adafruit IO
+
++ super easy to get started, you use need your username and an API key that
+you get from the Adafruit IO site
++ cool dashboard with customizable widgets and live updating, nice job Adafruit!
++ reported thing state is name value pair (a temperature reading, a string, etc). Adafruit IO also saves metadata about updates.
++ has basic triggers to send email or run webhooks based on thing state
+
+
+#### AWS IoT
+
++ pretty involved to get set up, especially if you are not already used to AWS and IAM.
++ uses SSL certificates for authentication
++ reported thing state can be any JSON
++ has elaborate rule system that connects to all things AWS: SNS, Lambda, DynamoDB, S3, ...
+
 
 ## Requirements
 
@@ -28,6 +47,32 @@ A Raspberry Pi with Raspian Jessie. If you have a different distro thingpin shou
  - python 2.7 (`python -V` to check)
  - openssl 1.0.1+ linked into your python (`python -c "import ssl; print(ssl.OPENSSL_VERSION)"` to check)
  - RPi.GPIO 0.6.0a3 (`python -c "import RPi.GPIO; print(RPi.GPIO.VERSION)"` to check)
+
+
+## Getting Started (Adafruit)
+
+Visit [Adafruit IO](https://io.adafruit.com/) and sign up.
+
+### Install adafruit-io and thingpin on the RPi
+
+If your default python is python 3 (as in Raspbian Jessie) be sure to use `pip2` below. If you only have python 2, then `pip` will work. To tell which you have run `pip -V`
+
+
+```console
+sudo pip2 install -y \
+   https://github.com/adafruit/io-client-python/zipball/65320a
+   thingpin
+```
+
+*(The above URL will be removed when the `adafruit-io` package is published to PyPI)*
+
+...
+
+## Getting Started (for AWS IoT)
+
+You'll need an AWS account with IoT enabled. Run through the AWS IoT Getting Started guide to create and test a sample thing. The setup may feel a little cumbersome, but it will be worth it.
+
+Once setup you use an x.509 certificate to authenticate your thing: no AWS access keys are needed on your Raspberry Pi.
 
 ## Setup
 
@@ -59,7 +104,7 @@ Go through the tests with AWS IoT to make sure public cert, private key, and end
 ### Install thingpin on the RPi
 
 ```console
-pip install thingpin
+sudo pip install thingpin
 
 ```
 

@@ -37,6 +37,7 @@ import signal
 
 
 from .logger import Logger
+from .notifiers import create_notifier
 
 try:
     from .thingpin import Thingpin
@@ -75,7 +76,13 @@ def main():
         log.error('must run on Raspberry Pi')
         return 1
 
-    service = Thingpin(**config)
+    # TODO: support more than one
+    notifier_config = config['notifiers'].items()[0]
+    notifier = create_notifier(notifier_config[0], notifier_config[1])
+    service = Thingpin(notifier,
+                       pin_mode=config['pin_mode'],
+                       things=config['things'],
+                       debug=config.get('debug', False))
 
     pidfile = args.get('--pidfile')
     if pidfile is not None:

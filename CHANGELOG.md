@@ -3,7 +3,8 @@ This project uses [Semantic Versioning](http://semver.org/).
 
 ## *Unreleased*
 ### Added
-- stuff
+- factor notification of changes to Notifier class
+- support publishing to Adafruit IO
 
 ### Changed
 - things

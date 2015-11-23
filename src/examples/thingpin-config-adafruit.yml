@@ -1,0 +1,19 @@
+---
+notifiers:
+    adafruit:
+        username: your-username
+        api_key: your-api-key
+
+pin_mode: BCM
+
+things:
+    garage-door-2:
+        pin: 21
+        resistor: pull_up
+        debounce_delay: 0.750
+        sleep: 0.050
+        iot_states:
+            HIGH:
+                state: open
+            LOW:
+                state: closed

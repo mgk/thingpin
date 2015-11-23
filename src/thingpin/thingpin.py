@@ -1,7 +1,6 @@
 import os
 import time
 import traceback
-from thingamon import Client, Thing
 from .pin import *
 import logging
 
@@ -20,30 +19,15 @@ class Thingpin(object):
     Once started it does not return.
     """
 
-    def __init__(self, host=None, client_cert=None, private_key=None,
-                 aws_iot_message_unit_cost=None, heartbeat_thing=None,
-                 heartbeat_interval_seconds=None,
-                 estimated_change_freq=1.0 / 3600,
-                 pin_mode=None, things=None, debug=False):
+    def __init__(self, notifier, pin_mode=None, things=None, debug=True):
         """
         Create and configure a Thingpin.
 
         Args:
-            host (str): host name of AWS IoT endpoint
-            client_cert (str): name of client certificate file
-            private_key (str): name of private key for client certificate
-            aws_iot_message_unit_cost (float): cost of an AWS IoT message
-                used to estimate monthly cost of operating this thingpin
-            heartbeat_thing (str): name of AWS IoT Thing for state of
-                thingpin process. This can be used to verify that thingpin
-                is healthy even if it hasn't reported any pin changes in
-                a long time. If None, no heartbeat is reported.
-            heartbeat_interval_seconds (float): how often to report thingpin
-                state if `heartbeat_thing` is not None. If <= 0 then
-                no heartbeat is reported.
-            estimated_change_freq (float): estimate of how often each
-                pin will change. Only used for guessing AWS costs at startup.
-            things (dict of str: dict): each key is an AWS IoT Thing name
+            notifier (Notifier): Adafruit IO or AWS IoT notifier to publish
+                messages to
+            pin_mode (str): GPIO pin mode, 'BOARD' or 'BCM'
+            things (dict of str: dict): each key is athing name
                 and each value is the config for the Thing. For
                 example:
 
@@ -58,25 +42,14 @@ class Thingpin(object):
 
             daemon (bool): if True run as a daemon and log to syslog, else
                 run as a foreground process and log to stdout
-            debug (bool): if True log all MQTT traffic. The default is True
-                as it is useful to see and not too noisy.
+            debug (bool): if True log debugging info
         """
-        self.host = host
-        self.client_cert = os.path.expanduser(client_cert)
-        self.private_key = os.path.expanduser(private_key)
-        self.aws_iot_message_unit_cost = aws_iot_message_unit_cost
-        self.heartbeat_thing = heartbeat_thing
-        self.heartbeat_interval_seconds = heartbeat_interval_seconds
-        if heartbeat_interval_seconds <= 0:
-            self.heartbeat_thing = None
-            self.heartbeat_interval_seconds = None
-        self.estimated_change_freq = estimated_change_freq
+        self.notifier = notifier
+        self.pin_mode = pin_mode
         self.thing_config = things
         self.debug = debug
-        self.pin_mode = pin_mode
         self.pins = {}
 
-        self.client = None
         self.initialized = False
 
     def initialize(self):
@@ -85,47 +58,24 @@ class Thingpin(object):
 
             log.info('initializing')
 
-            for k in ['host', 'client_cert', 'private_key', 'heartbeat_thing',
-                      'heartbeat_interval_seconds', 'thing_config', 'debug']:
+            for k in ['pin_mode', 'thing_config', 'debug']:
                 log.info('{} = {}'.format(k, getattr(self, k)))
-
-            log.info('AWS monthly cost guesstimate ${:,.6f}'.format(
-                self.guess_monthly_cost()))
-            log.info('(don''t take the guesstimate too seriously!)')
 
             set_pin_mode(self.pin_mode)
 
-            # MQTT client
-            self.client = Client(self.host,
-                                 client_cert_filename=self.client_cert,
-                                 private_key_filename=self.private_key,
-                                 log_mqtt=self.debug)
+            self.notifier.initialize()
 
             # Pins
             for name, config in self.thing_config.items():
-                self.pins[name] = Pin(self.client, name, config)
+                self.pins[name] = Pin(self.notifier, name, config)
 
             self.initialized = True
             log.info('initialize complete')
 
     def cleanup(self):
         """Release system resources and reset GPIO pins"""
-        self.client.disconnect()
+        self.notifier.cleanup()
         pin_cleanup()
-
-    def guess_monthly_cost(self):
-        seconds_in_month = 60 * 60 * 24 * 30
-        if self.heartbeat_interval_seconds:
-            heartbeat_freq = 1.0 / self.heartbeat_interval_seconds
-        else:
-            heartbeat_freq = 0
-
-        msgs = heartbeat_freq + self.estimated_change_freq * seconds_in_month
-        return msgs * self.aws_iot_message_unit_cost
-
-    def heartbeat(self):
-        # TODO: implement me!
-        pass
 
     def run(self):
         self.initialize()
@@ -135,32 +85,28 @@ class Thingpin(object):
             pin.run()
 
         while True:
-            time.sleep(self.heartbeat_interval_seconds or 1e6)
-            self.heartbeat()
+            time.sleep(1000)
 
 
 class Pin(object):
-    """Composite of: a Watcher() thread, an MQTT Thing(), and config info"""
+    """Connect a GPIO pin to a notifier, interpreting pin state per config"""
 
-    def __init__(self, mqtt_client, name, config):
+    def __init__(self, notifier, name, config):
         """Setup an input pin"""
-        self.mqtt_client = mqtt_client
         self.name = name
         self.config = config
         setup_input_pin(config['pin'], config.get('resistor'))
-
+        self.notifier = notifier
         self.watcher = Watcher(observer=self,
                                pin=config['pin'],
                                sleep=config.get('sleep', .010),
                                debounce_delay=config.get('debounce_delay'))
 
-        self.thing = Thing(self.name, self.mqtt_client)
-
     def update_pin(self, pin, reading):
-        log.info('update_pin({},{})'.format(pin, reading))
-        self.thing.publish_state(self.get_state(reading))
+        self.notifier.notify(self.name, self.get_state(reading))
 
     def get_state(self, reading):
+        """Get state to report for GPIO reading"""
         if reading == GPIO.HIGH:
             return self.config['iot_states']['HIGH']
         else:

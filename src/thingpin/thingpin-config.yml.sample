@@ -1,34 +1,27 @@
 ---
+# configure either adafruit -or- aws, not both
+notifiers:
+    adafruit:
+        username: your-adafruit-io-username
+        api_key: your-adafruit-io-api-key
 
-# The AWS IoT endpoint host for your AWS account
-host: MY_IOT_HOST.iot.us-east-1.amazonaws.com
-
-# public certificate and private key
-client_cert: ~/cert.pem
-private_key: ~/private-key.pem
+# To use AWS uncomment this block and comment out adafruit block.
+#    aws:
+#        host: your-aws-host.iot.us-east-1.amazonaws.com
+#        client_cert: ~/cert.pem
+#        private_key: ~/private-key.pem
+#        estimated_change_freq: .01
 
 # Pin numbering you are using
 #   see http://sourceforge.net/p/raspberry-gpio-python/wiki/BasicUsage/
 #   or Google "rpi GPIO pin mode"
-pin_mode: "BCM"
-#pin_mmode: "BOARD"
+pin_mode: BCM
+#pin_mmode: BOARD
 
-# How often to check pins and report state to AWS IoT even if there are no
-# changes detected. This lets you know thingpin is healthy.
-heartbeat_interval_seconds: 30
 
-# At startup an estimated monthly cost of publishing messages is printed.
-#
-# Notes:
-#  - this does not include the cost of any message subscribers
-#  - the price of messages will likely change over time
-#
-# See the AWS IoT Pricing page for details and updates to the pricing model.
-aws_iot_message_unit_cost: !!float 5e-6
-
-# AWS Things to update and their settings. Each key is a thing name.
-# Add as many as you've got.
-
+# things describes how your GPIO pin states should be reported to
+# Adafruit IO or AWS IoT. Each key is a thing name. Each thing has a pin.
+# Each pin only appears once.
 things:
     important-door-1:
         # Example: a normally open reed switch connected between pin 14 and
@@ -53,6 +46,9 @@ things:
         sleep: 0.050
 
         # The AWS IoT states to use for each pin reading
+        # For AWS the states can be anything. For Adafruit each pin reading
+        # must have a state like "state: foo" where foo is a string
+        # or a number. Below we use the strings open and closed.
         iot_states:
             HIGH:
                 state: open
