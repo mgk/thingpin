@@ -7,7 +7,7 @@ This project uses [Semantic Versioning](http://semver.org/).
 - support publishing to Adafruit IO
 
 ### Changed
-- things
+- **breaking change**: config file format, pushing AWS config under notifiers section. Updating to new format should be straightforward. The sample config was updated and there is an AWS config in the new examples directory.
 
 ### Fixed
 - bugs
