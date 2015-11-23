@@ -59,8 +59,8 @@ If your default python is python 3 (as in Raspbian Jessie) be sure to use `pip2`
 
 
 ```console
-sudo pip2 install -y \
-   https://github.com/adafruit/io-client-python/zipball/65320a
+sudo pip2 install \
+   https://github.com/adafruit/io-client-python/zipball/65320a \
    thingpin
 ```
 
