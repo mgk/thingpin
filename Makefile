@@ -45,6 +45,9 @@ bump-patch:
 bump-minor:
 	$(BUMP) --no-tag minor
 
+bump-major:
+	$(BUMP) --no-tag major
+
 test:
 	pep8 setup.py src/thingpin
 	py.test
