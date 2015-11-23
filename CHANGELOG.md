@@ -3,14 +3,19 @@ This project uses [Semantic Versioning](http://semver.org/).
 
 ## *Unreleased*
 ### Added
+- stuff
+
+### Changed
+- things
+
+### Fixed
+- bugs
+### Added
 - factor notification of changes to Notifier class
 - support publishing to Adafruit IO
 
 ### Changed
 - **breaking change**: config file format, pushing AWS config under notifiers section. Updating to new format should be straightforward. The sample config was updated and there is an AWS config in the new examples directory.
-
-### Fixed
-- bugs
 
 ## [1.2.0](https://github.com/mgk/thingpin/releases/tag/v1.2.0) - [2015-11-11]
 ### Added
