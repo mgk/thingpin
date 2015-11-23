@@ -10,7 +10,8 @@ enabled.
 
 `See Documentation for Installation and Usage details`_
 
-.. _See Documentation for Installation and Usage details: https://github.com/mgk/thingpin/blob/master/README.md
+.. _See Documentation for Installation and Usage details: https://github.com/\
+mgk/thingpin/blob/master/README.md
 
 .. |Build Status| image:: https://img.shields.io/travis/mgk/thingpin.svg
    :target: https://travis-ci.org/mgk/thingpin
@@ -21,7 +22,8 @@ enabled.
 .. |Downloads| image:: https://img.shields.io/pypi/dm/thingpin.svg
    :target: https://pypi.python.org/pypi/thingpin
 
-.. |Flux Cap| image:: https://img.shields.io/badge/flux%20capacitor-1.21%20GW-orange.svg
+.. |Flux Cap| image:: https://img.shields.io/badge/\
+flux%20capacitor-1.21%20GW-orange.svg
 """
 import os
 import sys
@@ -30,7 +32,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='thingpin',
-    version='2.0.0',
+    version='2.0.1-dev',
     description='Raspberry Pi pin monitor that reports to AWS IoT',
     long_description=__doc__,
     url='https://github.com/mgk/thingpin/blob/master/README.md',
