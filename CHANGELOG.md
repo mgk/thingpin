@@ -10,6 +10,15 @@ This project uses [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - bugs
+## [2.0.0](https://github.com/mgk/thingpin/releases/tag/v2.0.0) - [2015-11-22]
+### Added
+- stuff
+
+### Changed
+- things
+
+### Fixed
+- bugs
 ### Added
 - factor notification of changes to Notifier class
 - support publishing to Adafruit IO
