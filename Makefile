@@ -1,4 +1,4 @@
-VERSION = 2.0.1-dev
+VERSION = 2.0.1
 NAME = thingpin
 DEB = $(NAME)_$(VERSION)_all.deb
 
