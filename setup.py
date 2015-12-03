@@ -53,6 +53,7 @@ setup(
         'console_scripts': ['thingpin=thingpin.main:main'],
     },
     tests_require=[
+        'mock',
         'pep8',
         'pytest',
         'freezegun'

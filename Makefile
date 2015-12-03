@@ -19,6 +19,8 @@ very-clean: clean
 install:
 	python setup.py install
 	pip install \
+	    pep8 \
+	    mock \
 		coveralls \
 		freezegun \
 		https://github.com/adafruit/io-client-python/zipball/65320a
