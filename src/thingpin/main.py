@@ -70,7 +70,6 @@ def main():
         return
 
     log = get_logger(args)
-    log.info('ok')
 
     if Thingpin is None:
         log.error('must run on Raspberry Pi')

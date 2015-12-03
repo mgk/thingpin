@@ -93,9 +93,11 @@ class AdafruitNotifier(Notifier):
             if client.disconnect_reason != MQTT_ERR_SUCCESS:
                 self.log.info('client disconnected, reconnecting')
                 client.connect()
+                self.log.info('connected to Adafruit')
 
         self.client.on_disconnect = on_disconnect
         self.client.connect()
+        self.log.info('connected to Adafruit')
         self.client.loop_background()
 
     def cleanup(self):
