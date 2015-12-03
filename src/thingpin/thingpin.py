@@ -4,8 +4,6 @@ import traceback
 from .pin import *
 import logging
 
-log = logging.getLogger('thingpin')
-
 
 class Thingpin(object):
     """
@@ -44,6 +42,7 @@ class Thingpin(object):
                 run as a foreground process and log to stdout
             debug (bool): if True log debugging info
         """
+        self.log = logging.getLogger('thingpin')
         self.notifier = notifier
         self.pin_mode = pin_mode
         self.thing_config = things
@@ -56,10 +55,10 @@ class Thingpin(object):
         """Initialize GPIO pins and connect to AWS IoT"""
         if not self.initialized:
 
-            log.info('initializing')
+            self.log.info('initializing')
 
             for k in ['pin_mode', 'thing_config', 'debug']:
-                log.info('{} = {}'.format(k, getattr(self, k)))
+                self.log.info('{} = {}'.format(k, getattr(self, k)))
 
             set_pin_mode(self.pin_mode)
 
@@ -70,7 +69,7 @@ class Thingpin(object):
                 self.pins[name] = Pin(self.notifier, name, config)
 
             self.initialized = True
-            log.info('initialize complete')
+            self.log.info('initialize complete')
 
     def cleanup(self):
         """Release system resources and reset GPIO pins"""
@@ -79,7 +78,7 @@ class Thingpin(object):
 
     def run(self):
         self.initialize()
-        log.info('run')
+        self.log.info('run')
 
         for pin in self.pins.values():
             pin.run()

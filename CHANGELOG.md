@@ -3,7 +3,7 @@ This project uses [Semantic Versioning](http://semver.org/).
 
 ## *Unreleased*
 ### Added
-- stuff
+- reconnect to Adafruit when disconnected
 
 ### Changed
 - things
@@ -12,31 +12,11 @@ This project uses [Semantic Versioning](http://semver.org/).
 - bugs
 
 ## [2.0.1](https://github.com/mgk/thingpin/releases/tag/v2.0.1) - [2015-11-22]
-### Added
-- stuff
-
-### Changed
-- things
 
 ### Fixed
-- bugs
-### Added
-- stuff
+- doc fixes
 
-### Changed
-- things
-
-### Fixed
-- bugs
 ## [2.0.0](https://github.com/mgk/thingpin/releases/tag/v2.0.0) - [2015-11-22]
-### Added
-- stuff
-
-### Changed
-- things
-
-### Fixed
-- bugs
 ### Added
 - factor notification of changes to Notifier class
 - support publishing to Adafruit IO

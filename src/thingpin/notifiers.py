@@ -3,8 +3,6 @@ import logging
 from thingamon import Client, Thing
 from Adafruit_IO import MQTTClient
 
-log = logging.getLogger('thingpin')
-
 
 def create_notifier(name, config):
     if name == 'adafruit':
@@ -34,18 +32,20 @@ class AWSIoTNotifier(Notifier):
                 pin will change. Only used for guessing AWS costs at startup.
             debug (bool): if True log all MQTT traffic.
         """
+        self.log = logging.getLogger('thingpin')
+
         self.host = host
         self.client_cert = os.path.expanduser(client_cert)
         self.private_key = os.path.expanduser(private_key)
         self.debug = debug
         self.client = None
 
-        log.info('AWS monthly cost guesstimate ${:,.8f}'.format(
+        self.log.info('AWS monthly cost guesstimate ${:,.8f}'.format(
             estimated_change_freq *
             60 * 60 * 24 * 30 *
             aws_iot_message_unit_cost
         ))
-        log.info('(don''t take the guesstimate too seriously!)')
+        self.log.info('(don''t take the guesstimate too seriously!)')
 
     def initialize(self):
         # MQTT client
@@ -77,6 +77,7 @@ class AdafruitNotifier(Notifier):
             username (str): Adafruit IO username
             api_key (str): Adafruit IO API key
         """
+        self.log = logging.getLogger('thingpin')
         self.username = username
         self.api_key = api_key
         self.host = host
@@ -87,6 +88,13 @@ class AdafruitNotifier(Notifier):
         self.client = MQTTClient(self.username, self.api_key,
                                  service_host=self.host,
                                  service_port=self.port)
+
+        def on_disconnect(client):
+            if client.disconnect_reason != MQTT_ERR_SUCCESS:
+                self.log.info('client disconnected, reconnecting')
+                client.connect()
+
+        self.client.on_disconnect = on_disconnect
         self.client.connect()
         self.client.loop_background()
 
@@ -94,5 +102,5 @@ class AdafruitNotifier(Notifier):
         self.client.disconnect()
 
     def notify(self, name, value):
-        log.info('Adafruit IO: publish({}={})'.format(name, value))
+        self.log.info('Adafruit IO: publish({}={})'.format(name, value))
         self.client.publish(name, value['state'])
