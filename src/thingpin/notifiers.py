@@ -90,7 +90,7 @@ class AdafruitNotifier(Notifier):
                                  service_port=self.port)
 
         def on_disconnect(client):
-            if client.disconnect_reason != MQTT_ERR_SUCCESS:
+            if client.disconnect_reason != 0:
                 self.log.info('client disconnected, reconnecting')
                 client.connect()
                 self.log.info('connected to Adafruit')
