@@ -16,7 +16,6 @@ A Raspberry Pi sensor monitor that publishes to [AWS IoT](https://aws.amazon.com
  	+ pin 21 HIGH can report {"door": "open"} and pin 15 LOW can report {"water": "detected": "yes"}} to AWS IoT
  	+ pull up or pull down resistors can be software configured independently for each input
 
-
 ## Getting Started
 
 thingpin can report status to AWS IoT or Adafruit IO. Both services are currently in beta. AWS IoT is an open beta, Adafruit IO currently requires a sign up. My Adafruit IO beta request was answered in a few days.
@@ -48,25 +47,9 @@ A Raspberry Pi with Raspian Jessie. If you have a different distro thingpin shou
  - openssl 1.0.1+ linked into your python (`python -c "import ssl; print(ssl.OPENSSL_VERSION)"` to check)
  - RPi.GPIO 0.6.0a3 (`python -c "import RPi.GPIO; print(RPi.GPIO.VERSION)"` to check)
 
-
 ## Getting Started (Adafruit)
 
-Visit [Adafruit IO](https://io.adafruit.com/) and sign up.
-
-### Install adafruit-io and thingpin on the RPi
-
-If your default python is python 3 (as in Raspbian Jessie) be sure to use `pip2` below. If you only have python 2, then `pip` will work. To tell which you have run `pip -V`
-
-
-```console
-sudo pip2 install \
-   https://github.com/adafruit/io-client-python/zipball/65320a \
-   thingpin
-```
-
-*(The above URL will be removed when the `adafruit-io` package is published to PyPI)*
-
-...
+Visit [Adafruit IO](https://io.adafruit.com/) and sign up. Get your API key.
 
 ## Getting Started (for AWS IoT)
 
@@ -103,9 +86,31 @@ Go through the tests with AWS IoT to make sure public cert, private key, and end
 
 ### Install thingpin on the RPi
 
+### Quick install
+
+Quick install performs the following:
+
++ installs the thingpin python package
++ installs the Adafruit IO python package (which is not yet on PyPI)
++ installs sample configs for AWS and Adafruit in /etc/thingpin
++ configures thingpin to run and restart automatically
+
+### Add mgk public key
+```console
+gpg --keyserver pgp.mit.edu --recv-keys 56F47B0CAFAF3866
+```
+
+### Install
+```console
+curl -sSL -O https://github.com/mgk/thingpin/raw/master/install
+sudo bash install
+```
+
+### Installing as Python package
+This installs the Python package only. See quick install above for other setup that you might need.
+
 ```console
 sudo pip install thingpin
-
 ```
 
 ### Running

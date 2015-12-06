@@ -1,10 +1,10 @@
 ---
+# Sample config using Adafruit IO
+# change username and api_key to match your Adafruit IO account
 notifiers:
-    aws:
-        host: your-aws-host.iot.us-east-1.amazonaws.com
-        client_cert: ~/cert.pem
-        private_key: ~/private-key.pem
-        estimated_change_freq: .01
+    adafruit:
+        username: your-username
+        api_key: your-api-key
 
 pin_mode: BCM
 

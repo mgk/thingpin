@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec thingpin -c /etc/thingpin/thingpin-config.yml run 2>&1 | logger -t thingpin

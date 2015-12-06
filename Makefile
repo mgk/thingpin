@@ -1,6 +1,6 @@
 VERSION = 2.0.2-dev
 NAME = thingpin
-DEB = $(NAME)_$(VERSION)_all.deb
+DEB_PACKAGE = dist/$(NAME)_$(VERSION)_all.deb
 
 BUMP = PYTHONPATH=src/misc bumpversion \
        --config-file src/misc/.bumpversion.cfg \
@@ -10,7 +10,7 @@ build: clean
 	python setup.py sdist bdist_wheel
 
 clean:
-	$(RM) build dist *.egg-info .coverage htmlcov $(DEB)
+	$(RM) build dist *.egg-info .coverage htmlcov
 
 very-clean: clean
 	$(RM) .eggs .cache
@@ -38,6 +38,8 @@ release: clean test
 	@echo "wait for Travis green light, then:"
 	@echo
 	@echo "twine upload dist/*"
+	@echo "make gemfury-upload"
+	@echo " --- Go to gemfury dashboard and make package public! ---"
 	@echo
 	@echo "do bump-minor or bump-patch before next release"
 
@@ -58,18 +60,25 @@ coverage:
 		coverage run --source=src/thingpin -m py.test
 		coverage html
 
-scp: build
-	scp dist/*.tar.gz pi@pi2a.local:~/
-	scp dist/*.tar.gz pi@pib1.local:~/
+scp: build deb
+	scp dist/*.deb dist/*.tar.gz pi@pi2a.local:~/
+	scp dist/*.deb dist/*.tar.gz pi@pib1.local:~/
 
 deb: build
 	fpm -s dir -t deb -a all \
   		-n $(NAME) -v $(VERSION) \
-  		--after-install after-install.sh \
-  		\
-  		$(NAME).py=/usr/local/bin/ \
-  		etc/init.d/$(NAME)=/etc/init.d/ \
-  		etc/$(NAME)/$(NAME).conf=/etc/$(NAME)/
+  		--package $(DEB_PACKAGE) \
+  		--depends runit \
+  		--template-scripts \
+  		--after-install src/misc/fpm-after-install.sh \
+  		`ls dist/*.tar.gz`=/tmp/$(NAME)-$(VERSION).tar.gz	 \
+   	    src/examples/etc/=/etc/
+
+gemfury-upload:
+	curl -F package=@$(DEB_PACKAGE) https://push.fury.io/$(GEMFURY_API_TOKEN)/
+
+sign-install-script:
+	gpg -ao install.asc --detach-sig install
 
 .PHONY: build clean very-clean install install-dev release bump-patch \
 	    bump-minor test scp deb

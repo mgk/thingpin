@@ -4,12 +4,13 @@ This project uses [Semantic Versioning](http://semver.org/).
 ## *Unreleased*
 ### Added
 - reconnect to Adafruit when disconnected
-
-### Changed
-- things
-
-### Fixed
-- bugs
+- install script that uses .deb package
+  - installs the thingpin python package
+  - installs the Adafruit IO python package (which is not yet on PyPI)
+  - installs sample configs for AWS and Adafruit in /etc/thingpin
+  - configures thingpin to run and restart automatically as runit service
+- .deb package available on gemfury
+- install script singed with mgk key available on MIT keyserver
 
 ## [2.0.1](https://github.com/mgk/thingpin/releases/tag/v2.0.1) - [2015-11-22]
 

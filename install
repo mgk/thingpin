@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Verify signature of install script
+curl -sSL -o /tmp/install.asc https://github.com/mgk/thingpin/raw/master/install.asc
+gpg --verify /tmp/install.asc install
+
+# Add mgk Gemfury repo to those trusted by APT
+echo "deb [trusted=yes] https://repo.fury.io/mgk/ /" >> /etc/apt/sources.list.d/gemfury.list
+
+# Make sure APT can use HTTPS
+apt-get install -y apt-transport-https
+apt-get update
+
+# Install latest version of thingpin
+apt-get install -y thingpin

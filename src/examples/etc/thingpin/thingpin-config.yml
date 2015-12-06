@@ -1,4 +1,6 @@
 ---
+# Default config uses Adafruit IO: set username and api_key to use
+# See other config examples in this directory
 notifiers:
     adafruit:
         username: your-username

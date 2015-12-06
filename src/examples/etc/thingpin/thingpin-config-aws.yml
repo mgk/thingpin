@@ -1,0 +1,24 @@
+---
+# Sample config using AWS IOT
+# Update host below and put your cert.pem and private-key.pem
+# in /etc/thingpin directory
+notifiers:
+    aws:
+        host: your-aws-host.iot.us-east-1.amazonaws.com
+        client_cert: /etc/thingpin/cert.pem
+        private_key: /etc/thingpin/private-key.pem
+        estimated_change_freq: .01
+
+pin_mode: BCM
+
+things:
+    garage-door-2:
+        pin: 21
+        resistor: pull_up
+        debounce_delay: 0.750
+        sleep: 0.050
+        iot_states:
+            HIGH:
+                state: open
+            LOW:
+                state: closed
