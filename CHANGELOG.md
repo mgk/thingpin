@@ -3,14 +3,6 @@ This project uses [Semantic Versioning](http://semver.org/).
 
 ## *Unreleased*
 ### Added
-- stuff
-
-### Changed
-- things
-
-### Fixed
-- bugs
-### Added
 - reconnect to Adafruit when disconnected
 - install script that uses .deb package
   - installs the thingpin python package
@@ -19,6 +11,8 @@ This project uses [Semantic Versioning](http://semver.org/).
   - configures thingpin to run and restart automatically as runit service
 - .deb package available on gemfury
 - install script singed with mgk key available on MIT keyserver
+
+The README needs an overhaul, but installing with the install script worked on both the Pi B+ and Pi2 test machines.
 
 ## [2.0.1](https://github.com/mgk/thingpin/releases/tag/v2.0.1) - [2015-11-22]
 
