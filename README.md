@@ -95,9 +95,10 @@ Quick install performs the following:
 + installs sample configs for AWS and Adafruit in /etc/thingpin
 + configures thingpin to run and restart automatically
 
-### Add mgk public key
+### Add mgk public key to current user keyring and root user keyring
 ```console
 gpg --keyserver pgp.mit.edu --recv-keys 56F47B0CAFAF3866
+sudo gpg --keyserver pgp.mit.edu --recv-keys 56F47B0CAFAF3866
 ```
 
 ### Install
