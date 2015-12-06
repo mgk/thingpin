@@ -1,4 +1,4 @@
-VERSION = 2.1.0
+VERSION = 2.1.1-dev
 NAME = thingpin
 DEB_PACKAGE = dist/$(NAME)_$(VERSION)_all.deb
 
