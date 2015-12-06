@@ -3,6 +3,15 @@ This project uses [Semantic Versioning](http://semver.org/).
 
 ## *Unreleased*
 ### Added
+- stuff
+
+### Changed
+- things
+
+### Fixed
+- bugs
+## [2.1.0](https://github.com/mgk/thingpin/releases/tag/v2.1.0) - [2015-12-06]
+### Added
 - reconnect to Adafruit when disconnected
 - install script that uses .deb package
   - installs the thingpin python package
