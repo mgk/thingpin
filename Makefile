@@ -37,9 +37,9 @@ release: clean test
 	@echo "so far so good..."
 	@echo "wait for Travis green light, then:"
 	@echo
-	@echo "twine upload dist/*"
+	@echo "twine upload dist/thingpin-*"
 	@echo "make gemfury-upload"
-	@echo " --- Go to gemfury dashboard and make package public! ---"
+	@echo " --- Remove gemfury -dev releases as they are seen as latest ---"
 	@echo
 	@echo "do bump-minor or bump-patch before next release"
 
