@@ -62,7 +62,6 @@ coverage:
 
 scp: build deb
 	scp dist/*.deb dist/*.tar.gz pi@pi2a.local:~/
-	scp dist/*.deb dist/*.tar.gz pi@pib1.local:~/
 
 deb: build
 	fpm -s dir -t deb -a all \
