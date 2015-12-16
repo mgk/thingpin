@@ -6,6 +6,8 @@ BUMP = PYTHONPATH=src/misc bumpversion \
        --config-file src/misc/.bumpversion.cfg \
        --post-hook bump.hook
 
+GEMFURY_API_TOKEN = `cat ~/.gemfury-token`
+
 build: clean
 	python setup.py sdist bdist_wheel
 
