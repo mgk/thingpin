@@ -1,4 +1,5 @@
 import os
+import sys
 import logging
 from thingamon import Client, Thing
 from Adafruit_IO import MQTTClient
@@ -67,7 +68,7 @@ class AdafruitNotifier(Notifier):
     # adafruit does not lock the connected state variable, thingamon does
     # not sure which is right yet
     def __init__(self, username=None, api_key=None, host='io.adafruit.com',
-                 port=1883, reconnect=False):
+                 port=1883):
         """
         Create an Adafruit MQTT notifier
 
@@ -76,7 +77,6 @@ class AdafruitNotifier(Notifier):
             port (int): port of Adafruit MQTT broker
             username (str): Adafruit IO username
             api_key (str): Adafruit IO API key
-            reconnect (bool): if True reconnect when disconnected
         """
         self.log = logging.getLogger('thingpin')
         self.username = username
@@ -84,7 +84,6 @@ class AdafruitNotifier(Notifier):
         self.host = host
         self.port = port
         self.client = None
-        self.reconnect = reconnect
 
     def initialize(self):
         self.client = MQTTClient(self.username, self.api_key,
@@ -93,12 +92,11 @@ class AdafruitNotifier(Notifier):
 
         def on_disconnect(client):
             if client.disconnect_reason != 0:
-                self.log.info('client disconnected, reconnecting')
-                client.connect()
-                self.log.info('connected to Adafruit')
+                self.log.info('client disconnected, exiting')
+                os._exit()
 
-        if self.reconnect:
-            self.client.on_disconnect = on_disconnect
+        self.client.on_disconnect = on_disconnect
+
         self.client.connect()
         self.log.info('connected to Adafruit')
         self.client.loop_background()
