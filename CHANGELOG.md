@@ -2,14 +2,11 @@
 This project uses [Semantic Versioning](http://semver.org/).
 
 ## *Unreleased*
-### Added
-- stuff
-
 ### Changed
-- things
+- removed Adafruit reconnect logic, instead let thingpin exit and get restarted by runit
 
 ### Fixed
-- bugs
+- make sure runit starts and stops python process reliably
 
 ## [2.1.0](https://github.com/mgk/thingpin/releases/tag/v2.1.0) - [2015-12-06]
 ### Added
