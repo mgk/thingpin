@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Verify signature of install script
+rm -f /tmp/install.asc
 curl -sSL -o /tmp/install.asc https://github.com/mgk/thingpin/raw/master/install.asc
 gpg --verify /tmp/install.asc install || exit 1
 
