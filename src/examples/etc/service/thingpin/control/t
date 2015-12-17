@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -f /var/run/thingpin.pid ]
+then
+  kill $(cat /var/run/thingpin.pid) || true
+  rm /var/run/thingpin.pid
+fi
+exit 1

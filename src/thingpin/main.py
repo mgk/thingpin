@@ -29,9 +29,6 @@ import yaml
 import docopt
 import shutil
 import pkg_resources
-import daemon
-import daemon.pidfile
-import lockfile
 import traceback
 import signal
 
@@ -85,14 +82,15 @@ def main():
 
     pidfile = args.get('--pidfile')
     if pidfile is not None:
-        run_as_daemon(service, pidfile)
-    else:
-        try:
-            service.run()
-        except KeyboardInterrupt:
-            log.info('exiting on Ctrl-C...')
-            service.cleanup()
-            return
+        with open(os.path.expanduser(pidfile), "w") as f:
+            f.write(str(os.getpid()))
+
+    try:
+        service.run()
+    except KeyboardInterrupt:
+        log.info('exiting on Ctrl-C...')
+        service.cleanup()
+        return
 
 
 def get_logger(args):
@@ -101,35 +99,6 @@ def get_logger(args):
         log_file = '/var/log/thingpin.log'
     return Logger(log_file=log_file)
 
-
-def run_as_daemon(service, pidfile):
-    def terminate(signal_num, stack_frame):
-        service.log.info('exiting...')
-        service.cleanup()
-        sys.exit()
-
-    try:
-        pflock = daemon.pidfile.TimeoutPIDLockFile(pidfile, 2)
-
-        with daemon.DaemonContext(pidfile=pflock,
-                                  signal_map={signal.SIGTERM: terminate}):
-            service.run()
-
-    except lockfile.LockFailed:
-        service.log.error("Unable to lock pid file: '{}'. Make sure you have"
-                          " write access to the pid file".format(pidfile))
-
-    except lockfile.LockTimeout:
-        service.log.error("pid file '{}' locked by another process. daemon"
-                          " may already be running".format(pidfile))
-
-    except SystemExit:
-        pass
-
-    except:
-        for line in traceback.format_exc().split('\n'):
-            if len(line):
-                service.log.error(line)
 
 if __name__ == '__main__':
     sys.exit(main())

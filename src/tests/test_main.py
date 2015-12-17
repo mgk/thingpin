@@ -42,17 +42,14 @@ def test_run_on_pi_ctrl_c(MockThingpin):
 
 @patch.object(thingpin.main, 'Thingpin')
 @patch.object(thingpin.main, 'Logger')
-@patch.object(thingpin.main.daemon, 'DaemonContext')
-@patch.object(thingpin.main.daemon, 'pidfile')
-def test_run_on_pi_as_daemon(MockThingpin, MockLogger, MockDaemonContext,
-                             mock_pidfile, tmpdir):
+def test_run_on_pi_as_daemon(MockThingpin, MockLogger, tmpdir):
     config = pkg_resources.resource_filename('thingpin',
                                              'thingpin-config.yml.sample')
     with patch.object(sys, 'argv',
                       [
                         'thingpin',
                         '-c', config,
-                        '--pidfile', tmpdir.join('t.pid'),
+                        '--pidfile', str(tmpdir.join('t.pid')),
                         'run']):
         mock_thingpin = Mock()
         MockThingpin.return_value = mock_thingpin
