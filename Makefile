@@ -62,8 +62,8 @@ coverage:
 		coverage run --source=src/thingpin -m py.test
 		coverage html
 
-scp: build deb
-	scp dist/*.deb dist/*.tar.gz pi@pi2a.local:~/
+scp: deb
+	scp $(DEB_PACKAGE) pi@pi2a.local:~/
 
 deb: build
 	fpm -s dir -t deb -a all \
@@ -72,8 +72,9 @@ deb: build
   		--depends runit \
   		--template-scripts \
   		--after-install src/misc/fpm-after-install.sh \
-  		`ls dist/*.tar.gz`=/tmp/$(NAME)-$(VERSION).tar.gz	 \
-   	    src/examples/etc/=/etc/
+  		`ls dist/*.tar.gz`=/tmp/$(NAME)-$(VERSION).tar.gz \
+  		src/examples/etc/thingpin/=/etc/thingpin/ \
+   	    src/examples/etc/service/thingpin/=/tmp/thingpin-service/
 
 gemfury-upload:
 	curl -F package=@$(DEB_PACKAGE) https://push.fury.io/$(GEMFURY_API_TOKEN)/
