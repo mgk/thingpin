@@ -97,13 +97,12 @@ Quick install performs the following:
 
 ### Add mgk public key to current user keyring and root user keyring
 ```console
-gpg --keyserver pgp.mit.edu --recv-keys 56F47B0CAFAF3866
 sudo gpg --keyserver pgp.mit.edu --recv-keys 56F47B0CAFAF3866
 ```
 
 ### Install
 ```console
-curl -sSL -O https://github.com/mgk/thingpin/raw/master/install
+sudo curl -sSL -O https://github.com/mgk/thingpin/raw/master/install
 sudo bash install
 ```
 

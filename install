@@ -2,7 +2,7 @@
 
 # Verify signature of install script
 curl -sSL -o /tmp/install.asc https://github.com/mgk/thingpin/raw/master/install.asc
-gpg --verify /tmp/install.asc install
+gpg --verify /tmp/install.asc install || exit 1
 
 # Add mgk Gemfury repo to those trusted by APT
 echo "deb [trusted=yes] https://repo.fury.io/mgk/ /" >> /etc/apt/sources.list.d/gemfury.list
