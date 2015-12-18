@@ -2,6 +2,15 @@
 This project uses [Semantic Versioning](http://semver.org/).
 
 ## *Unreleased*
+### Added
+- stuff
+
+### Changed
+- things
+
+### Fixed
+- bugs
+## [3.0.1](https://github.com/mgk/thingpin/releases/tag/v3.0.1) - [2015-12-18]
 
 ### Changed
 - removed Adafruit reconnect logic, instead let thingpin exit and get restarted by runit. This is working reliably.
