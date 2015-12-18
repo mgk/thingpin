@@ -2,6 +2,14 @@
 This project uses [Semantic Versioning](http://semver.org/).
 
 ## *Unreleased*
+### Added
+- stuff
+
+### Changed
+- things
+
+### Fixed
+- bugs
 ### Changed
 - removed Adafruit reconnect logic, instead let thingpin exit and get restarted by runit
 
