@@ -93,7 +93,7 @@ class AdafruitNotifier(Notifier):
         def on_disconnect(client):
             if client.disconnect_reason != 0:
                 self.log.info('client disconnected, exiting')
-                os._exit()
+                os._exit(1)
 
         self.client.on_disconnect = on_disconnect
 
