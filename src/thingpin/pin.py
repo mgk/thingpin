@@ -40,7 +40,7 @@ def setup_input_pin(pin, resistor=None):
     elif resistor == 'pull_down':
         pull_up_down = GPIO.PUD_DOWN
     elif resistor == 'float' or resistor is None:
-        pull_up_down = None
+        pull_up_down = GPIO.PUD_OFF
     else:
         raise ValueError('invalid resistor setting {}'.format(resistor))
 
