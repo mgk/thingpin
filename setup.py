@@ -5,7 +5,7 @@ thingpin
 ========
 
 `thingpin`_ monitors Raspberry Pi inputs and reports them to AWS IoT. Use it
-to build an door sensor, water sensor, motion detector, etc. that is IoT
+to build a door sensor, water sensor, motion detector, etc. that is IoT
 enabled.
 
 `See Documentation for Installation and Usage details`_
