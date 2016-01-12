@@ -1,10 +1,8 @@
+# thingpin
 [![Build Status](https://img.shields.io/travis/mgk/thingpin.svg)](https://travis-ci.org/mgk/thingpin)
 [![Coverage Status](https://img.shields.io/coveralls/mgk/thingpin.svg)](https://coveralls.io/github/mgk/thingpin?branch=master)
 [![Downloads](https://img.shields.io/pypi/dm/thingpin.svg)](https://pypi.python.org/pypi/thingpin)
-
 ![Flux Cap](https://img.shields.io/badge/flux%20capacitor-1.21%20GW-orange.svg)
-
-# thingpin
 
 A Raspberry Pi sensor monitor that publishes to [AWS IoT](https://aws.amazon.com/iot/) using [MQTT](http://mqtt.org/) or [Adafruit IO](https://io.adafruit.com/). Features:
 
