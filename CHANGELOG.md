@@ -10,6 +10,14 @@ This project uses [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - bugs
+### Added
+- stuff
+
+### Changed
+- things
+
+### Fixed
+- bugs
 ## [3.0.2](https://github.com/mgk/thingpin/releases/tag/v3.0.2) - [2016-01-11]
 ### Fixed
 - https://github.com/mgk/thingpin/issues/6 - could not set resistor to None
