@@ -54,11 +54,14 @@ class AWSIoTNotifier(Notifier):
                              client_cert_filename=self.client_cert,
                              private_key_filename=self.private_key,
                              log_mqtt=self.debug)
+        self.client.connect()
+        self.log.info('connected to AWS IoT')
 
     def cleanup(self):
         self.client.disconnect()
 
     def notify(self, name, value):
+        self.log.info('AWS IoT: publish({}={})'.format(name, value))
         Thing(name, self.client).publish_state(value)
 
 

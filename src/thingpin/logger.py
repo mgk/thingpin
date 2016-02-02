@@ -10,7 +10,7 @@ def Logger(name='thingpin', level=logging.INFO, log_file=None):
 
     if log_file is not None:
         handler = logging.handlers.RotatingFileHandler(
-            log_file, maxBytes=10 * 1024 * 1024, backupCount=10)
+            log_file, maxBytes=10 * 1024 * 1024, backupCount=50)
         handler.setFormatter(logging.Formatter(
             '%(asctime)s %(name)s %(process)d %(levelname)s %(message)s'))
     else:
